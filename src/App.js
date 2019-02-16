@@ -3,6 +3,12 @@ import logo from './logo.svg';
 import './App.css';
 
 class App extends Component {
+  componentDidMount(){
+    fetch("http://localhost:9393/ingredients.json")
+      .then(res => res.json())
+      .then(console.log)
+  }
+
   render() {
     return (
       <div className="App">
