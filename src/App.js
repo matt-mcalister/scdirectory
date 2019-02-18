@@ -6,7 +6,9 @@ import firebase from "./firebase"
 
 class App extends Component {
   state = {
-    ingredients: {}
+    ingredients: {},
+    showLegal: true,
+    showIllegal: true,
   }
 
   componentDidMount(){
@@ -32,12 +34,25 @@ class App extends Component {
       })
   }
 
+  toggleChecked = (e) => {
+    this.setState({
+      [e.target.name]: !this.state[e.target.name]
+    })
+  }
+
 
   render() {
     console.log(this.state);
     let ingredients = Object.keys(this.state.ingredients)
     return (
       <div className="App">
+      <div id="checkboxes">
+        <label htmlFor="showLegal">Show all legal: </label>
+        <input type="checkbox" name="showLegal" checked={this.state.showLegal} onChange={this.toggleChecked} />
+        <br />
+        <label htmlFor="showIllegal">Show all illegal: </label>
+        <input type="checkbox" name="showIllegal" checked={this.state.showIllegal} onChange={this.toggleChecked} />
+      </div>
         <div id="ingredients-list">
           {this.sortIngredientIds(ingredients).map(id => <IngredientItem key={id} {...this.state.ingredients[id]} />)}
         </div>
