@@ -20,6 +20,13 @@ class App extends Component {
       }))
   }
 
+  filterIngredientIds(ingredientIds){
+    return ingredientIds.filter(id => {
+      let ing = this.state.ingredients[id]
+      return ((this.state.showLegal && ing.legal) || (this.state.showIllegal && !ing.legal))
+    })
+  }
+
   sortIngredientIds(ingredientIds){
     return ingredientIds.sort((a, b) => {
         let nameA = this.state.ingredients[a].name.toLowerCase()
@@ -42,8 +49,9 @@ class App extends Component {
 
 
   render() {
-    console.log(this.state);
+
     let ingredients = Object.keys(this.state.ingredients)
+    let filteredIngredients = this.filterIngredientIds(ingredients)
     return (
       <div className="App">
       <div id="checkboxes">
@@ -54,7 +62,7 @@ class App extends Component {
         <input type="checkbox" name="showIllegal" checked={this.state.showIllegal} onChange={this.toggleChecked} />
       </div>
         <div id="ingredients-list">
-          {this.sortIngredientIds(ingredients).map(id => <IngredientItem key={id} {...this.state.ingredients[id]} />)}
+          {this.sortIngredientIds(filteredIngredients).map(id => <IngredientItem key={id} {...this.state.ingredients[id]} />)}
         </div>
       </div>
     );
