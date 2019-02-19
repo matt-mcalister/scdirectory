@@ -9,6 +9,7 @@ class App extends Component {
     ingredients: {},
     showLegal: true,
     showIllegal: true,
+    searchTerm: ""
   }
 
   componentDidMount(){
@@ -24,6 +25,7 @@ class App extends Component {
     return ingredientIds.filter(id => {
       let ing = this.state.ingredients[id]
       return ((this.state.showLegal && ing.legal) || (this.state.showIllegal && !ing.legal))
+       && ing.name.toLowerCase().includes(this.state.searchTerm.toLowerCase())
     })
   }
 
@@ -43,7 +45,13 @@ class App extends Component {
 
   toggleChecked = (e) => {
     this.setState({
-      [e.target.name]: !this.state[e.target.name]
+      [e.target.name]: e.target.checked
+    })
+  }
+
+  handleChange = (e) => {
+    this.setState({
+      [e.target.name]: e.target.value
     })
   }
 
@@ -54,13 +62,19 @@ class App extends Component {
     let filteredIngredients = this.filterIngredientIds(ingredients)
     return (
       <div className="App">
-      <div id="checkboxes">
-        <label htmlFor="showLegal">Show all legal: </label>
-        <input type="checkbox" name="showLegal" checked={this.state.showLegal} onChange={this.toggleChecked} />
+        <h1>SCD Ingredient Directory</h1>
+        <form onSubmit={e => e.preventDefault()}>
+          <label htmlFor="searchTerm">Filter by name: </label>
+          <input type="text" name="searchTerm" value={this.state.searchTerm} onChange={this.handleChange} />
+        </form>
+        <div id="checkboxes">
+          <label htmlFor="showLegal">Show all legal: </label>
+          <input type="checkbox" name="showLegal" checked={this.state.showLegal} onChange={this.toggleChecked} />
+          <br />
+          <label htmlFor="showIllegal">Show all illegal: </label>
+          <input type="checkbox" name="showIllegal" checked={this.state.showIllegal} onChange={this.toggleChecked} />
+        </div>
         <br />
-        <label htmlFor="showIllegal">Show all illegal: </label>
-        <input type="checkbox" name="showIllegal" checked={this.state.showIllegal} onChange={this.toggleChecked} />
-      </div>
         <div id="ingredients-list">
           {this.sortIngredientIds(filteredIngredients).map(id => <IngredientItem key={id} {...this.state.ingredients[id]} />)}
         </div>
